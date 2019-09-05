@@ -1,7 +1,6 @@
 import {app} from "../index";
-import Rocket from "./Rocket";
+import RocketManager from "./RocketManager";
 import * as PIXI from 'pixi.js';
-
 
 export default class BadCat
 {
@@ -52,7 +51,7 @@ export default class BadCat
 
         if (this.keyState[32] && this.fireCooldown >= this.fireSpeed)
         {
-            let rocket = new Rocket(this.sprite.position.x, this.sprite.position.y);
+            let rocket = new RocketManager(this.sprite.position.x, this.sprite.position.y);
             this.fireCooldown = 0;
         }
     }

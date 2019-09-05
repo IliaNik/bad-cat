@@ -2,10 +2,9 @@ import {app} from "../index";
 import * as PIXI from 'pixi.js';
 
 
-
 let _list = [];
 
-export default class Rocket
+export default class RocketManager
 {
     static get list() { return _list; }
     static set list(value) { _list = value; }
@@ -18,7 +17,7 @@ export default class Rocket
         this.sprite.position.set(x + 50, y);
 
         this.speed = 20;
-        Rocket.list.push(this);
+        RocketManager.list.push(this);
 
         app.stage.addChild(this.sprite);
     }
@@ -29,7 +28,7 @@ export default class Rocket
 
         if (this.sprite.position.x > app.screen.width * 1.1) {
             this.sprite.destroy();
-            Rocket.list.splice(Rocket.list.indexOf(this), 1);
+            RocketManager.list.splice(RocketManager.list.indexOf(this), 1);
         }
     }
 }
