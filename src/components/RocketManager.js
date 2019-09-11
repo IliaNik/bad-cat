@@ -13,6 +13,8 @@ export default class RocketManager
     {
         this.sprite = new PIXI.Sprite(app.loader.resources["assets/rocket.png"].texture);
 
+        this.sprite.width = app.screen.width * 0.07;
+        this.sprite.height = app.screen.width * 0.05;
         this.sprite.anchor.set(0.5, 0.5);
         this.sprite.position.set(x + 50, y);
 
@@ -30,5 +32,10 @@ export default class RocketManager
             this.sprite.destroy();
             RocketManager.list.splice(RocketManager.list.indexOf(this), 1);
         }
+    }
+
+    clean() {
+        app.stage.removeChild(RocketManager.list);
+        RocketManager.list = [];
     }
 }

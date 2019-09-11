@@ -2,6 +2,9 @@ import {app} from "../index";
 import RocketManager from "./RocketManager";
 import * as PIXI from 'pixi.js';
 
+const BAD_CAT_Z_INDEX = 1000;
+
+
 export default class BadCat
 {
     constructor()
@@ -10,10 +13,15 @@ export default class BadCat
 
         this.sprite.anchor.set(0.5, 0.5);
         this.sprite.position.set(app.screen.width * 0.2, app.screen.height * 0.4);
-        this.sprite.scale.set(0.2, 0.2);
+        this.sprite.width = app.screen.width * 0.1;
+        this.sprite.height = app.screen.width * 0.1;
+        this.sprite.zIndex = BAD_CAT_Z_INDEX;
 
         this.keyState = {32: false, 37: false, 38: false, 39: false, 40: false};
-        this.keyCodes = {37: -1, 38: -1, 39: 1, 40: 1};
+        let unit = Math.trunc(app.screen.width/400);
+        unit = unit === 0 ? 0.5 : unit;
+
+        this.keyCodes = {37: -unit, 38: -unit, 39: unit, 40: unit};
 
         this.directionX = 0;
         this.directionY = 0;
@@ -42,6 +50,13 @@ export default class BadCat
         }
 
         this.updateFire();
+    }
+
+    clean()
+    {
+        this.sprite.position.set(app.screen.width * 0.2, app.screen.height * 0.4);
+        this.sprite.width = app.screen.width * 0.1;
+        this.sprite.height = app.screen.width * 0.1;
     }
 
     updateFire()
