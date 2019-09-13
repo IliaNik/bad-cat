@@ -11,11 +11,12 @@ export default class RocketManager
 
     constructor(x, y)
     {
-        this.sprite = new PIXI.Sprite(app.loader.resources["assets/rocket.png"].texture);
+        this.sprite = new PIXI.Sprite(app.loader.resources["assets/emoji_heart.png"].texture);
 
-        this.sprite.width = app.screen.width * 0.07;
+        this.sprite.width = app.screen.width * 0.05;
         this.sprite.height = app.screen.width * 0.05;
         this.sprite.anchor.set(0.5, 0.5);
+        this.sprite.rotation -= 1.6;
         this.sprite.position.set(x + 50, y);
 
         this.speed = 20;

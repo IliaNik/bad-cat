@@ -37,11 +37,14 @@ let scoreCounter;
 
 app.loader.add([
     "assets/repeat_button.svg",
+    "assets/emoji_heart.png",
     "assets/background_grass.jpg",
     "assets/start_button.svg",
     "assets/bitch.png",
     "assets/bad_cat.png",
+    "assets/sad_cat.png",
     "assets/rocket.png",
+    "assets/dead_dog.png",
     "assets/shocked_dog.png"
 ]).load(init);
 
@@ -62,6 +65,7 @@ export let repeatGame = () => {
     bitchManager.clean();
     player.clean();
     scoreCounter.clean();
+    shockedDog.makeDogShoсked();
 
     app.ticker.start();
 };
@@ -90,6 +94,8 @@ function gameLoop() {
             bitchManager.stopBitchesProducing();
             scoreCounter.showFinal();
             controllerPanel.stopGame()
+            player.makeCatSad();
+            shockedDog.makeDogDead();
         }
     });
 

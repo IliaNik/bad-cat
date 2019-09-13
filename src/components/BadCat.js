@@ -13,15 +13,23 @@ export default class BadCat
 
         this.sprite.anchor.set(0.5, 0.5);
         this.sprite.position.set(app.screen.width * 0.2, app.screen.height * 0.4);
-        this.sprite.width = app.screen.width * 0.1;
-        this.sprite.height = app.screen.width * 0.1;
+        this.sprite.width = app.screen.width * 0.09;
+        this.sprite.height = app.screen.width * 0.09;
         this.sprite.zIndex = BAD_CAT_Z_INDEX;
-        this.fireSpeed = 10;
+        this.fireSpeed = 20;
         this.fireCooldown = 0;
 
         this.fireActivated = true;
 
         app.stage.addChild(this.sprite);
+    }
+
+    makeCatSad() {
+        this.sprite.texture = app.loader.resources["assets/sad_cat.png"].texture
+    }
+
+    makeCatBad() {
+        this.sprite.texture = app.loader.resources["assets/bad_cat.png"].texture
     }
 
     move(y) {
@@ -41,6 +49,7 @@ export default class BadCat
         this.sprite.position.set(app.screen.width * 0.2, app.screen.height * 0.4);
         this.sprite.width = app.screen.width * 0.1;
         this.sprite.height = app.screen.width * 0.1;
+        this.sprite.texture = app.loader.resources["assets/bad_cat.png"].texture
     }
 
     updateFire()

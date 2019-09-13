@@ -15,4 +15,12 @@ export class ShockedDog {
 
         app.stage.addChild(this.sprite);
     }
+
+    makeDogDead() {
+        this.sprite.texture = app.loader.resources["assets/dead_dog.png"].texture
+    }
+
+    makeDogShoсked() {
+        this.sprite.texture = app.loader.resources["assets/shocked_dog.png"].texture
+    }
 }

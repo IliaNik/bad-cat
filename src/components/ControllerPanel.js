@@ -44,6 +44,8 @@ export class ControllerPanel {
         if (key.keyCode == 38 || key.keyCode == 40) {
             this.directionY = this.keyCodes[key.keyCode];
         }
+        this.player.fireActivated = false;
+
     }
 
     onKeyUp(key) {
@@ -54,6 +56,9 @@ export class ControllerPanel {
         else if (this.keyState[38] && !this.keyState[40])
             this.directionY = this.keyCodes[38];
         else this.directionY = 0;
+
+        this.player.fireActivated = true;
+
     }
 
     createControlPanelPlace() {

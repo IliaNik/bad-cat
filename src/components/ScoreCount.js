@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import {app} from "../index";
 
-const SCORE = 'SCORE: ';
+const SCORE = 'Убито сук: ';
 const COUNTER_Z_INDEX = 1000;
 
 export class ScoreCounter {
