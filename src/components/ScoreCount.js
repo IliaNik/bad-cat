@@ -1,12 +1,14 @@
 import * as PIXI from 'pixi.js';
 import {app} from "../index";
 
-const SCORE = 'Убито сук: ';
+const SCORE = 'Счет: ';
 const COUNTER_Z_INDEX = 1000;
 
 export class ScoreCounter {
     constructor() {
         this.score = 0;
+        this.finalFontSize = Math.trunc(app.screen.width * 0.08);
+        this.normalFontSize = Math.trunc(app.screen.width * 0.03);
         this.showScore();
     }
 
@@ -22,9 +24,11 @@ export class ScoreCounter {
     }
 
     showScore(final) {
+
+
         this.sprite = new PIXI.Text(SCORE + this.score, {
             fontFamily: 'Courier New',
-            fontSize: final ? "45px" : "25px",
+            fontSize: final ? this.finalFontSize + "px" : this.normalFontSize + "px",
             fill: 0xff1010,
             align: 'center'
         });

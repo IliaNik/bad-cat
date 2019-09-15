@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {app, repeatGame, startGame} from "../index";
+import {app, pauseOpening, playOpening, repeatGame, startGame} from "../index";
 
 const CONTROL_PANEL_Z_INDEX = 100000;
 
@@ -30,18 +30,18 @@ export class ControllerPanel {
     }
 
     update() {
-        let nextY = this.container.position.y + this.directionY * this.speed;
+        let nextY = this.controllContainer.position.y + this.directionY * this.speed;
 
         if (nextY >= app.screen.height * 0.13 && nextY <= app.screen.height * 0.88) {
-            this.container.position.y = nextY;
-            this.player.move(this.container.position.y);
+            this.controllContainer.position.y = nextY;
+            this.player.move(this.controllContainer.position.y);
         }
     }
 
     onKeyDown(key) {
         this.keyState[key.keyCode] = true;
 
-        if (key.keyCode == 38 || key.keyCode == 40) {
+        if (key.keyCode === 38 || key.keyCode === 40) {
             this.directionY = this.keyCodes[key.keyCode];
         }
         this.player.fireActivated = false;
@@ -81,16 +81,16 @@ export class ControllerPanel {
 
     startGame() {
 
-        this.container = new PIXI.Container();
-        this.container.position.set(this.startOfControlPanel + this.widthOfControlPanel / 2, app.screen.height / 2);
-        this.container.zIndex = CONTROL_PANEL_Z_INDEX + 1;
-        this.container.buttonMode = true;
-        this.container.interactive = true;
-        this.container.sortableChildren = true;
+        this.controllContainer = new PIXI.Container();
+        this.controllContainer.position.set(this.startOfControlPanel + this.widthOfControlPanel / 2, app.screen.height / 2);
+        this.controllContainer.zIndex = CONTROL_PANEL_Z_INDEX + 1;
+        this.controllContainer.buttonMode = true;
+        this.controllContainer.interactive = true;
+        this.controllContainer.sortableChildren = true;
         this.createControlCircle();
         this.createControlCircleShadow();
 
-        this.container
+        this.controllContainer
         // events for drag start
             .on('mousedown', this.onDragStart.bind(this))
             .on('touchstart', this.onDragStart.bind(this))
@@ -103,7 +103,7 @@ export class ControllerPanel {
             .on('mousemove', this.onDragMove.bind(this))
             .on('touchmove', this.onDragMove.bind(this));
 
-        app.stage.addChild(this.container);
+        app.stage.addChild(this.controllContainer);
     }
 
     createControlCircleShadow() {
@@ -124,7 +124,7 @@ export class ControllerPanel {
         blurFilter.blur = 0.9;
         this.circleShadow.filters = [blurFilter];
 
-        this.container.addChild(this.circleShadow);
+        this.controllContainer.addChild(this.circleShadow);
     }
 
     createControlCircle() {
@@ -140,7 +140,7 @@ export class ControllerPanel {
         // this.controlCircle.position.set(this.startOfControlPanel + this.widthOfControlPanel / 2, app.screen.height / 2);
         this.controlCircle.zIndex = 10;
 
-        this.container.addChild(this.controlCircle);
+        this.controllContainer.addChild(this.controlCircle);
 
     }
 
@@ -148,9 +148,9 @@ export class ControllerPanel {
         // store a reference to the data
         // the reason for this is because of multitouch
         // we want to track the movement of this particular touch
-        this.container.data = event.data;
+        this.controllContainer.data = event.data;
         // this.alpha = 0.5;
-        this.container.dragging = true;
+        this.controllContainer.dragging = true;
         this.player.fireActivated = false;
 
     }
@@ -158,32 +158,61 @@ export class ControllerPanel {
     onDragEnd() {
         // this.alpha = 1;
 
-        this.container.dragging = false;
+        this.controllContainer.dragging = false;
 
         // set the interaction data to null
-        this.container.data = null;
+        this.controllContainer.data = null;
 
         this.player.fireActivated = true;
     }
 
     onDragMove() {
-        if (this.container.dragging) {
-            let newPosition = this.container.data.getLocalPosition(app.stage);
+        if (this.controllContainer.dragging) {
+            let newPosition = this.controllContainer.data.getLocalPosition(app.stage);
             if (newPosition.y >= app.screen.height * 0.13 && newPosition.y <= app.screen.height * 0.88) {
-                this.container.position.y = newPosition.y;
-                this.player.move(this.container.position.y);
+                this.controllContainer.position.y = newPosition.y;
+                this.player.move(this.controllContainer.position.y);
             }
         }
     }
 
     initButtons() {
-        this.startButton = new PIXI.Sprite(app.loader.resources["assets/start_button.svg"].texture);
-        this.repeatButton = new PIXI.Sprite(app.loader.resources["assets/repeat_button.svg"].texture);
+        this.playButton = new PIXI.Sprite(app.loader.resources["assets/buttons/play_button.svg"].texture);
+        this.pauseButton = new PIXI.Sprite(app.loader.resources["assets/buttons/pause_button.svg"].texture);
+        this.startButton = new PIXI.Sprite(app.loader.resources["assets/buttons/start_button.svg"].texture);
+        this.repeatButton = new PIXI.Sprite(app.loader.resources["assets/buttons/repeat_button.svg"].texture);
+        let playButton = this.playButton;
+        let pauseButton = this.pauseButton;
         let startButton = this.startButton;
         let repeatButton = this.repeatButton;
 
+        this.initButton(playButton);
+        this.initButton(pauseButton);
         this.initButton(startButton);
         this.initButton(repeatButton);
+        this.playButton
+            .on('tap', () => {
+                app.stage.removeChild(this.playButton);
+                app.stage.addChild(this.pauseButton);
+                playOpening()
+            })
+            .on('click', () => {
+                app.stage.removeChild(this.playButton);
+                app.stage.addChild(this.pauseButton);
+                playOpening()
+            });
+
+        this.pauseButton
+            .on('tap', () => {
+                app.stage.removeChild(this.pauseButton);
+                app.stage.addChild(this.playButton);
+                pauseOpening()
+            })
+            .on('click', () => {
+                app.stage.removeChild(this.pauseButton);
+                app.stage.addChild(this.playButton);
+                pauseOpening()
+            });
 
         this.startButton
             .on('tap', () => {
@@ -206,7 +235,7 @@ export class ControllerPanel {
             });
 
 
-        app.stage.addChild(this.startButton);
+        app.stage.addChild(this.playButton);
     }
 
     initButton(startButton) {
@@ -220,8 +249,14 @@ export class ControllerPanel {
         startButton.buttonMode = true;
     }
 
+    makeReadyToStartGame() {
+        app.stage.removeChild(this.playButton);
+        app.stage.removeChild(this.pauseButton);
+        app.stage.addChild(this.startButton);
+    }
+
     stopGame() {
-        app.stage.removeChild(this.container);
+        app.stage.removeChild(this.controllContainer);
         app.stage.addChild(this.repeatButton);
     }
 }

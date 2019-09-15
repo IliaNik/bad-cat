@@ -28,6 +28,7 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "pixi-sound": "^3.0.3",
     "pixi.js": "^5.1.2"
   }
 }

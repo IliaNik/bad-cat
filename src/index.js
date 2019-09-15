@@ -7,6 +7,7 @@ import {hitTestRectangle} from "./CollisionUtils";
 import {ScoreCounter} from "./components/ScoreCount";
 import {ShockedDog} from "./components/ShockedDog";
 import {ControllerPanel} from "./components/ControllerPanel";
+import {cleanAnimationSprites, prologueAnimation} from "./PrologueAnimation";
 
 // The application will create a renderer using WebGL, if possible,
 // with a fallback to a canvas render. It will also setup the ticker
@@ -36,19 +37,44 @@ let controllerPanel;
 let scoreCounter;
 
 app.loader.add([
-    "assets/repeat_button.svg",
+    "assets/buttons/play_button.svg",
+    "assets/buttons/pause_button.svg",
+    "assets/buttons/start_button.svg",
+    "assets/buttons/repeat_button.svg",
+    "assets/prologue/confused_cat.png",
+    "assets/prologue/confused_dog.png",
+    "assets/prologue/love_cat.png",
+    "assets/prologue/love_dog.png",
+    "assets/prologue/silent_film_text.jpg",
     "assets/emoji_heart.png",
     "assets/background_grass.jpg",
-    "assets/start_button.svg",
     "assets/bitch.png",
     "assets/bad_cat.png",
     "assets/sad_cat.png",
     "assets/rocket.png",
     "assets/dead_dog.png",
+    "assets/prologue/old_film_effect.jpg",
     "assets/shocked_dog.png"
 ]).load(init);
 
+
+export let playOpening = () => {
+    app.ticker.add(prologueAnimationLoop);
+};
+
+export let pauseOpening = () => {
+    app.ticker.remove(prologueAnimationLoop);
+};
+
+let prologueAnimationLoop = () => {
+    let isAnimationFinished = prologueAnimation();
+    if (isAnimationFinished) {
+        controllerPanel.makeReadyToStartGame();
+    }
+};
+
 export let startGame = () => {
+    cleanAnimationSprites();
     controllerPanel.startGame();
     shockedDog = new ShockedDog();
     bitchManager = new BitchManager();
@@ -57,7 +83,7 @@ export let startGame = () => {
 
     controllerPanel.setPlayer(player);
 
-    app.ticker.add(delta => gameLoop(delta));
+    app.ticker.add(gameLoop);
 };
 
 export let repeatGame = () => {
@@ -65,7 +91,7 @@ export let repeatGame = () => {
     bitchManager.clean();
     player.clean();
     scoreCounter.clean();
-    shockedDog.makeDogShoсked();
+    shockedDog.makeDogShocked();
 
     app.ticker.start();
 };
@@ -73,8 +99,8 @@ export let repeatGame = () => {
 
 function initBackground() {
     let background = new PIXI.Sprite(app.loader.resources["assets/background_grass.jpg"].texture);
-    background.width = app.renderer.width;
-    background.height = app.renderer.height;
+    background.width = app.screen.width;
+    background.height = app.screen.height;
     background.zIndex = BACKGROUND_Z_INDEX;
     app.stage.addChild(background);
 }
@@ -86,14 +112,14 @@ function init() {
     app.render();
 }
 
-function gameLoop() {
+let gameLoop = () => {
     BitchManager.list.forEach(function (bitchSprite) {
         if (hitTestRectangle(bitchSprite, shockedDog.sprite)) {
             app.ticker.stop();
             // todo cover everything by rectangle
             bitchManager.stopBitchesProducing();
             scoreCounter.showFinal();
-            controllerPanel.stopGame()
+            controllerPanel.stopGame();
             player.makeCatSad();
             shockedDog.makeDogDead();
         }
@@ -121,5 +147,5 @@ function gameLoop() {
             rocket.update();
         }
     });
-}
+};
 

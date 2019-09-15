@@ -1,6 +1,7 @@
 import {app} from "../index";
 import * as PIXI from 'pixi.js';
 import {PLAYGROUND_WIDTH_RATIO} from "./ControllerPanel";
+import {LevelCount} from "./LevelCount";
 
 let _list = [];
 
@@ -23,14 +24,17 @@ export default class BitchManager
         this.timeout = INITIAL_TIMEOUT;
         this.interval = window.setInterval(this.produceBitch(), this.timeout);
         this.speed = Math.trunc(app.screen.width / 200);
+        this.levelCount = new LevelCount();
     }
 
     update()
     {
         this.timeFrameCounter++;
 
-        if (this.timeFrameCounter / 500 > 1) {
+        if (this.timeFrameCounter / 1000 > 1) {
             this.timeFrameCounter = 0;
+            this.levelCount.increaseLevel();
+            this.levelCount.update();
             clearInterval(this.interval);
             this.timeout *= 0.8;
             this.speed *= 1.2;
@@ -71,6 +75,7 @@ export default class BitchManager
         this.timeout = INITIAL_TIMEOUT;
         this.speed = Math.trunc(app.screen.width / 200);
         this.interval = window.setInterval(this.produceBitch(), this.timeout);
+        this.levelCount.clean();
     }
 
     stopBitchesProducing() {

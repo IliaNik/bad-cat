@@ -20,7 +20,7 @@ export class ShockedDog {
         this.sprite.texture = app.loader.resources["assets/dead_dog.png"].texture
     }
 
-    makeDogShoсked() {
+    makeDogShocked() {
         this.sprite.texture = app.loader.resources["assets/shocked_dog.png"].texture
     }
 }
