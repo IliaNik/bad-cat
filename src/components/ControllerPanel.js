@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {app, pauseOpening, playOpening, repeatGame, startGame} from "../index";
+import {app, pausePrologue, playPrologue, repeatGame, startGame} from "../index";
 
 const CONTROL_PANEL_Z_INDEX = 100000;
 
@@ -194,24 +194,24 @@ export class ControllerPanel {
             .on('tap', () => {
                 app.stage.removeChild(this.playButton);
                 app.stage.addChild(this.pauseButton);
-                playOpening()
+                playPrologue()
             })
             .on('click', () => {
                 app.stage.removeChild(this.playButton);
                 app.stage.addChild(this.pauseButton);
-                playOpening()
+                playPrologue()
             });
 
         this.pauseButton
             .on('tap', () => {
                 app.stage.removeChild(this.pauseButton);
                 app.stage.addChild(this.playButton);
-                pauseOpening()
+                pausePrologue()
             })
             .on('click', () => {
                 app.stage.removeChild(this.pauseButton);
                 app.stage.addChild(this.playButton);
-                pauseOpening()
+                pausePrologue()
             });
 
         this.startButton

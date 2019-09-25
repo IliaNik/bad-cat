@@ -29,6 +29,13 @@ app.renderer.autoDensity = true;
 app.renderer.view.style.position = "absolute";
 app.renderer.view.style.display = "block";
 app.renderer.resize(window.innerWidth, window.innerHeight);
+let prologueSound = document.getElementById("prologue_sound");
+let gameSound = document.getElementById("game_sound");
+let finalSadSound = document.getElementById("final_sad_song");
+let ohMySound = document.getElementById("oh_my");
+let startSerenaSound = document.getElementById("start_serena");
+ohMySound.volume = 1.0;
+finalSadSound.volume = 0.1;
 
 let bitchManager;
 let player;
@@ -58,23 +65,31 @@ app.loader.add([
 ]).load(init);
 
 
-export let playOpening = () => {
+export let playPrologue = () => {
+    prologueSound.play();
     app.ticker.add(prologueAnimationLoop);
 };
 
-export let pauseOpening = () => {
+export let pausePrologue = () => {
+    prologueSound.pause();
     app.ticker.remove(prologueAnimationLoop);
 };
 
 let prologueAnimationLoop = () => {
     let isAnimationFinished = prologueAnimation();
     if (isAnimationFinished) {
+        prologueSound.pause();
         controllerPanel.makeReadyToStartGame();
+        app.ticker.remove(prologueAnimationLoop);
     }
 };
 
 export let startGame = () => {
     cleanAnimationSprites();
+    prologueSound.pause();
+    startSerenaSound.play();
+    gameSound.play();
+
     controllerPanel.startGame();
     shockedDog = new ShockedDog();
     bitchManager = new BitchManager();
@@ -87,6 +102,9 @@ export let startGame = () => {
 };
 
 export let repeatGame = () => {
+    startSerenaSound.play();
+    gameSound.play();
+
     controllerPanel.startGame();
     bitchManager.clean();
     player.clean();
@@ -116,12 +134,15 @@ let gameLoop = () => {
     BitchManager.list.forEach(function (bitchSprite) {
         if (hitTestRectangle(bitchSprite, shockedDog.sprite)) {
             app.ticker.stop();
-            // todo cover everything by rectangle
             bitchManager.stopBitchesProducing();
             scoreCounter.showFinal();
             controllerPanel.stopGame();
             player.makeCatSad();
             shockedDog.makeDogDead();
+            gameSound.pause();
+            ohMySound.play();
+            finalSadSound.play();
+            gameSound.currentTime = 0;
         }
     });
 
